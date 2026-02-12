@@ -270,11 +270,11 @@ function isMicSupported() {
 
 async function startMic() {
   if (!isMicSupported()) {
-    setMicUI({ enabled: false, text: "Микрофон: не поддерживается в этом браузере" });
+    setMicUI({ enabled: false, text: "не поддерживается" });
     return false;
   }
   if (!window.isSecureContext) {
-    setMicUI({ enabled: false, text: "Микрофон: нужен https:// или localhost" });
+    setMicUI({ enabled: false, text: "нужен https" });
     return false;
   }
 
@@ -290,14 +290,14 @@ async function startMic() {
     src.connect(analyser);
 
     micEnabled = true;
-    setMicUI({ enabled: true, text: "включён ✅ — можно «задуть» свечу" });
+    setMicUI({ enabled: true, text: "включён ✅" });
 
     blowHoldMs = 0;
     lastTs = 0;
     monitorMic();
     return true;
   } catch (err) {
-    setMicUI({ enabled: false, text: "Микрофон: доступ не предоставлен" });
+    setMicUI({ enabled: false, text: "доступ запрещён" });
     return false;
   }
 }
