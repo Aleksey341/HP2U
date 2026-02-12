@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1, viewport-fit=cover" />
   <title>С Днём Рождения, Ирина!</title>
-  <link rel="stylesheet" href="./style.css?v=15" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="stage">
@@ -33,7 +33,7 @@
               <div class="candle" aria-hidden="true">
                 <div class="candle__body"></div>
                 <div class="wick" id="wick" aria-hidden="true"></div>
-                <div class="flame" id="flame" aria-hidden="true"></div>
+                <div class="flame on" id="flame" aria-hidden="true"></div>
                 <div class="smoke" id="smoke" aria-hidden="true"></div>
               </div>
 
@@ -49,7 +49,7 @@
           </div>
 
           <div class="controls">
-            <div class="steps">
+            <div class="steps" id="steps">
               <span class="step">1) Загадай желание</span>
               <span class="dot">•</span>
               <span class="step">2) Включи микрофон</span>
@@ -87,6 +87,6 @@
     <canvas id="fx" class="fx" aria-hidden="true"></canvas>
   </main>
 
-  <script src="./script.js?v=15"></script>
+  <script src="script.js"></script>
 </body>
 </html>
