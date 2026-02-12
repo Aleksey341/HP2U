@@ -467,3 +467,19 @@ wishText.textContent = "Открой конверт 🙂";
 footerMsg.textContent = "Нажми на конверт, чтобы начать.";
 ending.hidden = true;
 setMicUI({ enabled: false, text: "выключен" });
+
+/* Falling particles */
+(function() {
+  var c = document.getElementById("particlesBg");
+  if (!c) return;
+  var syms = ["❤","✨","⭐","💕","🌟"];
+  function add() {
+    var p = document.createElement("span");
+    p.textContent = syms[Math.floor(Math.random()*syms.length)];
+    p.style.cssText = "position:absolute;left:"+Math.random()*100+"%;top:-20px;font-size:"+(10+Math.random()*14)+"px;opacity:"+(0.4+Math.random()*0.3)+";animation:particleFall "+(7+Math.random()*5)+"s linear forwards;";
+    c.appendChild(p);
+    setTimeout(function(){p.remove();},12000);
+  }
+  setInterval(add,900);
+  for(var i=0;i<4;i++)setTimeout(add,i*250);
+})();
