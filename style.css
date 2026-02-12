@@ -399,4 +399,10 @@ body{
   .steps{ padding: 9px 10px; }
   .step{ font-size: 12.2px; }
 }
+@media (max-width: 768px){
+  .stage{
+    place-items: start center; /* 📱 на телефоне — сверху */
+  }
+}
+
 
