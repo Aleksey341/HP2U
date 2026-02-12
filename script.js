@@ -20,6 +20,7 @@ const micBtn = document.getElementById("micBtn");
 const micStatus = document.getElementById("micStatus");
 const soundToggle = document.getElementById("soundToggle");
 
+const tip = document.getElementById("tip");
 const canvas = document.getElementById("fx");
 const ctx = canvas.getContext("2d", { alpha: true });
 
@@ -410,6 +411,7 @@ closeLetterBtn.addEventListener("click", (e) => {
 });
 cake.addEventListener("click", (e) => {
   e.stopPropagation();
+  if (tip) tip.style.display = "none";
 
   const rect = cake.getBoundingClientRect();
   const x = rect.left + rect.width * 0.5;
