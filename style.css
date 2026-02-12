@@ -386,7 +386,7 @@ body{
 /* mobile */
 @media (max-width: 420px){
   .envelope{ height: 260px; }
-  .letter{ width: calc(100% - 18px); position:relative; margin-top:-40px; }
+  .letter{ width: calc(100% - 28px); }
   .letter__body{ padding: 10px 14px 14px; }
   .wish{ font-size: 14.5px; padding: 10px; }
 
