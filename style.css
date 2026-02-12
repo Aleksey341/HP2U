@@ -404,5 +404,20 @@ body{
     place-items: start center; /* 📱 на телефоне — сверху */
   }
 }
+/* === FORCE CENTER ON DESKTOP === */
+.stage{
+  min-height: 100svh;
+  display: grid;
+  place-items: center !important;
+  padding: 14px;
+}
+
+/* === MOBILE: START TOP === */
+@media (max-width: 768px){
+  .stage{
+    place-items: start center !important;
+  }
+}
+
 
 
