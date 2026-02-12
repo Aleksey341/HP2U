@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!doctype html>
 <html lang="ru">
 <head>
@@ -52,6 +53,7 @@
               <span class="slider-label">Свеча</span>
               <input id="candleSlider" class="slider" type="range" min="0" max="100" value="0" />
               <span class="slider-state" id="sliderState">потушена</span>
+              <div class="slider-hint" id="sliderHint">Потяни вправо, чтобы зажечь свечу →</div>
             </div>
 
             <div class="steps" id="steps">
@@ -77,6 +79,14 @@
           </div>
 
           <p class="footer" id="footerMsg"></p>
+
+          <div class="ending" id="ending" hidden>
+            <p class="ending-text">
+              Спасибо, что остановилась на секунду.<br>
+              Пусть желание обязательно сбудется ✨
+            </p>
+            <button class="btn btn2" id="closeCard" type="button">Закрыть открытку</button>
+          </div>
         </div>
       </article>
     </section>
