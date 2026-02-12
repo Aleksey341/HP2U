@@ -10,14 +10,12 @@ const flame = document.getElementById("flame");
 const smoke = document.getElementById("smoke");
 const wick = document.getElementById("wick");
 
-const randomBtn = document.getElementById("randomBtn");
 const closeLetterBtn = document.getElementById("closeLetterBtn");
 
 const ending = document.getElementById("ending");
 const closeCard = document.getElementById("closeCard");
 
-const micBtn = document.getElementById("micBtn");
-const micStatus = document.getElementById("micStatus");
+const micToggle = document.getElementById("micToggle");
 const soundToggle = document.getElementById("soundToggle");
 
 const tip = document.getElementById("tip");
@@ -255,15 +253,14 @@ function setCandleOff(source = "mic") {
 
 /* mic UI */
 function setMicUI({ enabled, text, level = null } = {}) {
-  micBtn.classList.toggle("is-on", !!enabled);
-  micBtn.setAttribute("aria-pressed", enabled ? "true" : "false");
-  micBtn.textContent = enabled ? "Микрофон: вкл ✅" : "Микрофон: выкл 🎙️";
+  
+  
 
   if (level != null && enabled) {
     const bars = Math.max(0, Math.min(10, Math.floor(level * 60)));
-    micStatus.textContent = `Микрофон: слушаю ${"▮".repeat(bars)}${"▯".repeat(10 - bars)}`;
+    micToggle.textContent = `слушаю ${"▮".repeat(bars)}${"▯".repeat(10 - bars)}`;
   } else {
-    micStatus.textContent = text ?? (enabled ? "Микрофон: включён" : "Микрофон: выключен");
+    micToggle.textContent = text ?? (enabled ? "включён ✅" : "выключен");
   }
 }
 
@@ -293,7 +290,7 @@ async function startMic() {
     src.connect(analyser);
 
     micEnabled = true;
-    setMicUI({ enabled: true, text: "Микрофон: включён — можно «задуть» свечу" });
+    setMicUI({ enabled: true, text: "включён ✅ — можно «задуть» свечу" });
 
     blowHoldMs = 0;
     lastTs = 0;
@@ -319,7 +316,7 @@ function stopMic() {
   }
   analyser = null;
   micEnabled = false;
-  setMicUI({ enabled: false, text: "Микрофон: выключен" });
+  setMicUI({ enabled: false, text: "выключен" });
 }
 
 function monitorMic() {
@@ -393,11 +390,6 @@ envelope.addEventListener("click", () => {
   else { setRandomWish(); beep(740, 0.05, 0.02); }
 });
 
-randomBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  setRandomWish();
-  beep(880, 0.05, 0.02);
-});
 
 closeLetterBtn.addEventListener("click", (e) => {
   e.stopPropagation();
@@ -441,7 +433,7 @@ cake.addEventListener("click", (e) => {
   beep(880, 0.05, 0.02);
 });
 
-micBtn.addEventListener("click", async (e) => {
+micToggle.addEventListener("click", async (e) => {
   e.stopPropagation();
 
   if (micEnabled) {
@@ -474,4 +466,4 @@ closeCard.addEventListener("click", (e) => {
 wishText.textContent = "Открой конверт 🙂";
 footerMsg.textContent = "Нажми на конверт, чтобы начать.";
 ending.hidden = true;
-setMicUI({ enabled: false, text: "Микрофон: выключен" });
+setMicUI({ enabled: false, text: "выключен" });
