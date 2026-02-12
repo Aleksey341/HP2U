@@ -386,7 +386,7 @@ body{
 
 /* mobile */
 @media (max-width: 420px){
-  .candle{ top: -5px; }
+  .candle{ top: -25px; }
   
   .envelope{ height: 260px; }
   .letter{ width: calc(100% - 28px); }
