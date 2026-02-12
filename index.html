@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>С Днём Рождения, Ирина!</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="stage">
+    <section class="card-wrap">
+      <button class="envelope" id="envelope" type="button" aria-label="Открыть конверт">
+        <span class="env-back"></span>
+        <span class="env-front"></span>
+        <span class="env-flap"></span>
+        <span class="stamp" aria-hidden="true">💌</span>
+        <span class="hint" id="hint">Нажми, чтобы открыть…</span>
+      </button>
+
+      <article class="letter" id="letter" aria-live="polite">
+        <header class="letter__head">
+          <div class="badge">🎉</div>
+          <h1>Ирина, с Днём Рождения!</h1>
+          <p class="sub">Открытка с тортом, свечой и маленьким «вау» 🙂</p>
+        </header>
+
+        <div class="letter__body">
+          <p id="wishText" class="wish"></p>
+
+          <div class="cake-area">
+            <div class="cake-wrap">
+              <div class="candle" aria-hidden="true">
+                <div class="candle__body"></div>
+                <div class="wick" id="wick" aria-hidden="true"></div>
+                <div class="flame" id="flame" aria-hidden="true"></div>
+                <div class="smoke" id="smoke" aria-hidden="true"></div>
+              </div>
+
+              <button class="cake" id="cake" type="button" aria-label="Нажми на торт">
+                <div class="cake__top"></div>
+                <div class="cake__mid"></div>
+                <div class="cake__base"></div>
+                <div class="sprinkles" aria-hidden="true"></div>
+              </button>
+
+              <div class="tip" id="tip">Нажми на торт — будет магия ✨</div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <div class="slider-row">
+              <span class="slider-label">Свеча</span>
+              <input id="candleSlider" class="slider" type="range" min="0" max="100" value="0" />
+              <span class="slider-state" id="sliderState">потушена</span>
+            </div>
+
+            <div class="steps" id="steps">
+              <span class="step">1) Зажги свечу</span>
+              <span class="dot">•</span>
+              <span class="step">2) Включи микрофон</span>
+              <span class="dot">•</span>
+              <span class="step">3) Подуй, чтобы задуть</span>
+            </div>
+
+            <div class="actions">
+              <button class="btn" id="randomBtn" type="button">Ещё пожелание</button>
+              <button class="btn btn2" id="partyBtn" type="button">Праздник!</button>
+              <button class="btn btn3" id="micBtn" type="button" aria-pressed="false">Микрофон: выкл 🎙️</button>
+            </div>
+
+            <div class="mic-status" id="micStatus">Микрофон: выключен</div>
+
+            <label class="toggle">
+              <input id="soundToggle" type="checkbox" />
+              <span>тихий режим (без звуков)</span>
+            </label>
+          </div>
+
+          <p class="footer" id="footerMsg"></p>
+        </div>
+      </article>
+    </section>
+
+    <canvas id="fx" class="fx" aria-hidden="true"></canvas>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
