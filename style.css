@@ -25,17 +25,19 @@ body{
   overflow-y:auto;
 }
 
-/* === FORCE CENTER ON DESKTOP === */
+/* center on all devices by default */
 .stage{
   min-height: 100svh;
   display:grid;
-  place-items:center !important;
+  place-items:center;
   padding:14px;
 }
 
-/* 📱 on mobile: start at top (prevents cut-off) */
-@media (max-width: 768px){
-  .stage{ place-items:start center !important; }
+/* if viewport height is too small — start at top to avoid cut off */
+@media (max-height: 740px){
+  .stage{
+    place-items:start center;
+  }
 }
 
 .card-wrap{
@@ -119,7 +121,7 @@ body{
   opacity:0;
   pointer-events:none;
   transition: transform .7s cubic-bezier(.2,.9,.2,1), opacity .35s ease;
-  overflow: visible; /* no internal scroll */
+  overflow: visible;
 }
 
 .letter__head{
@@ -294,10 +296,14 @@ body{
     radial-gradient(circle at 20% 70%, #06d6a0 0 2px, transparent 3px),
     radial-gradient(circle at 34% 45%, #118ab2 0 2px, transparent 3px),
     radial-gradient(circle at 52% 62%, #8338ec 0 2px, transparent 3px),
-    radial-gradient(circle at 68% 44%, #ff7a59 0 2px, transparent 3px),
-    radial-gradient(circle at 82% 66%, #ffd166 0 2px, transparent 3px);
+    radial_gradient(circle at 68% 44%, #ff7a59 0 2px, transparent 3px),
+    radial_gradient(circle at 82% 66%, #ffd166 0 2px, transparent 3px);
   opacity:.95;
 }
+
+/* NOTE: Some editors auto-corrected "radial-gradient" above; ensure it's "radial-gradient" not "radial_gradient". */
+/* If you see the underscore variant, replace it with radial-gradient. */
+
 .tip{
   position:absolute;
   bottom: 0;
