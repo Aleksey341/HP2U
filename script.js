@@ -26,6 +26,7 @@ const ctx = canvas.getContext("2d", { alpha: true });
 let opened = false;
 let lastWish = -1;
 let effectIndex = 0;
+let wishTimer = null;
 
 /* MIC */
 let micStream = null;
@@ -55,11 +56,20 @@ const footerByState = {
   on:  "Свеча горит. Загадай желание… (и попробуй задуть в микрофон 🙂)",
 };
 
+function showWish(text) {
+  if (wishTimer) clearTimeout(wishTimer);
+  wishText.textContent = text;
+  wishText.classList.add("show");
+  wishTimer = setTimeout(() => {
+    wishText.classList.remove("show");
+  }, 2000);
+}
+
 function setRandomWish() {
   let i = Math.floor(Math.random() * wishes.length);
   if (i === lastWish) i = (i + 1) % wishes.length;
   lastWish = i;
-  wishText.textContent = wishes[i];
+  showWish(wishes[i]);
 }
 
 function resizeCanvas() {
@@ -347,7 +357,7 @@ function monitorMic() {
       const rect = cake.getBoundingClientRect();
       effectSparkles(rect.left + rect.width * 0.5, rect.top + rect.height * 0.12);
 
-      wishText.textContent = "Свеча погасла… желание отправлено во Вселенную 🙂";
+      showWish("Свеча погасла… желание отправлено во Вселенную 🙂");
       footerMsg.textContent = "Можно закрыть открытку ниже — или открыть снова.";
       ending.hidden = false;
 
@@ -369,7 +379,7 @@ function openEnvelope() {
   setCandleOn();
   ending.hidden = true;
 
-  wishText.textContent = "Свеча уже горит. Загадай желание… 🙂";
+  showWish("Свеча уже горит. Загадай желание… 🙂");
   footerMsg.textContent = footerByState.on;
 
   const r = envelope.getBoundingClientRect();
@@ -424,7 +434,7 @@ cake.addEventListener("click", (e) => {
     "Это было красиво. Ещё раз?",
   ];
   const p = phrases[Math.floor(Math.random() * phrases.length)];
-  wishText.textContent = p + " " + wishes[Math.floor(Math.random() * wishes.length)];
+  showWish(p + " " + wishes[Math.floor(Math.random() * wishes.length)]);
 
   beep(880, 0.05, 0.02);
 });
