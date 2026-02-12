@@ -32,7 +32,9 @@ body{
   background:none;
   border:0;
   position:relative;
+  overflow:hidden;          /* 🔑 КЛЮЧЕВОЕ */
   cursor:pointer;
+  border-radius:18px;
 }
 .env-back{position:absolute;inset:0;background:#ffd6e0;border-radius:18px}
 .env-front{position:absolute;bottom:0;height:60%;width:100%;background:#ffb3c6;clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%)}
@@ -48,18 +50,20 @@ body{
   background:#fff7ee;
   color:#1c1c1c;
   border-radius:16px;
-  margin-top:-40px;
+  margin-top:-48px;         /* аккуратно выезжает из конверта */
   opacity:0;
   pointer-events:none;
-  transform:translateY(40px);
-  transition:.5s;
+  transform:translateY(24px);
+  transition:opacity .4s ease, transform .4s ease;
 }
+
 
 .envelope.open + .letter{
   opacity:1;
   pointer-events:auto;
   transform:translateY(0);
 }
+
 
 /* ТЕКСТ */
 .letter__head{padding:16px;border-bottom:1px dashed #ccc}
@@ -95,3 +99,4 @@ body{
 .footer{font-size:12px;margin-top:6px}
 
 .ending{text-align:center;margin-top:12px}
+
