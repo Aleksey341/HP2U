@@ -383,7 +383,7 @@ body{
 
 /* mobile */
 @media (max-width: 420px){
-  .stage{ place-items:start center; }
+  
   .envelope{ height: 260px; }
   .letter{ width: calc(100% - 28px); }
   .letter__body{ padding: 10px 14px 14px; }
