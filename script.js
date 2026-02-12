@@ -40,10 +40,9 @@ let blowHoldMs = 0;
 let lastTs = 0;
 let micEnabled = false;
 
-// Настройки "подува"
-const BLOW_THRESHOLD = 0.12;      // чувствительность (0..~0.3)
-const BLOW_HOLD_TIME = 220;       // мс удержания, чтобы "задуло"
-const MIN_ON_TIME_MS = 350;       // не тушить мгновенно после зажигания
+const BLOW_THRESHOLD = 0.12;
+const BLOW_HOLD_TIME = 220;
+const MIN_ON_TIME_MS = 350;
 let candleOnSince = 0;
 
 const wishes = [
@@ -94,7 +93,7 @@ function beep(freq = 880, dur = 0.06, gain = 0.03) {
   } catch (_) {}
 }
 
-/* ===== smoke + wick glow ===== */
+/* smoke + wick glow */
 function puffSmoke() {
   if (!smoke) return;
   smoke.classList.remove("on");
@@ -111,7 +110,7 @@ function wickGlow() {
   setTimeout(() => wick.classList.remove("glow"), 300);
 }
 
-/* ===== FX (particles canvas) ===== */
+/* FX */
 function clearFx() {
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 }
@@ -119,7 +118,6 @@ function clearFx() {
 function runParticles(particles, drawFn) {
   function frame() {
     clearFx();
-
     for (const p of particles) {
       p.vy += p.g ?? 0;
       p.x += p.vx;
@@ -128,7 +126,6 @@ function runParticles(particles, drawFn) {
       p.life -= 1;
       drawFn(p);
     }
-
     const alive = particles.some(p => p.life > 0);
     if (alive) requestAnimationFrame(frame);
     else clearFx();
@@ -301,14 +298,14 @@ function effectRainbowWave(x, y) {
 }
 
 const effects = [
-  { name: "confetti", fn: effectConfetti },
-  { name: "hearts", fn: effectHearts },
-  { name: "sparkles", fn: effectSparkles },
-  { name: "firework", fn: effectFirework },
-  { name: "rainbow", fn: effectRainbowWave },
+  { fn: effectConfetti },
+  { fn: effectHearts },
+  { fn: effectSparkles },
+  { fn: effectFirework },
+  { fn: effectRainbowWave },
 ];
 
-/* ===== candle logic ===== */
+/* candle state */
 function setCandleState(isOn, source = "ui") {
   flame.classList.toggle("on", isOn);
   sliderState.textContent = isOn ? "горит" : "потушена";
@@ -326,7 +323,7 @@ function setCandleState(isOn, source = "ui") {
   }
 }
 
-/* ===== mic toggle ===== */
+/* mic UI */
 function setMicUI({ enabled, text, level = null } = {}) {
   if (micBtn) {
     micBtn.classList.toggle("is-on", !!enabled);
@@ -360,11 +357,7 @@ async function startMic() {
 
   try {
     micStream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true,
-      }
+      audio: { echoCancellation:true, noiseSuppression:true, autoGainControl:true }
     });
 
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -380,7 +373,6 @@ async function startMic() {
     lastTs = 0;
     monitorMic();
     return true;
-
   } catch (err) {
     setMicUI({ enabled: false, text: "Микрофон: доступ не предоставлен" });
     return false;
@@ -442,7 +434,6 @@ function monitorMic() {
 
       wishText.textContent = "Свеча погасла… желание отправлено во Вселенную 🙂";
       footerMsg.textContent = "Можно закрыть открытку ниже — или зажечь ещё раз.";
-
       if (ending) ending.hidden = false;
 
       beep(520, 0.08, 0.02);
@@ -454,7 +445,7 @@ function monitorMic() {
   micRAF = requestAnimationFrame(loop);
 }
 
-/* ===== events ===== */
+/* events */
 function openEnvelope() {
   envelope.classList.add("open");
   opened = true;
@@ -479,7 +470,6 @@ candleSlider.addEventListener("input", () => {
 
   if (isOn && sliderHint) sliderHint.style.display = "none";
 
-  // если потушили слайдером — чуть кино (без финала)
   if (wasOn && !isOn) {
     wickGlow();
     puffSmoke();
@@ -499,7 +489,7 @@ randomBtn.addEventListener("click", (e) => {
 partyBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   const rect = cake.getBoundingClientRect();
-  effectConfetti(rect.left + rect.width*0.5, rect.top + rect.height*0.2);
+  effects[0].fn(rect.left + rect.width*0.5, rect.top + rect.height*0.2);
   setRandomWish();
   beep(1040, 0.06, 0.03);
 });
@@ -569,10 +559,10 @@ closeCard?.addEventListener("click", (e) => {
 
   if (sliderHint) sliderHint.style.display = "";
 
-  // микрофон оставляем как есть (если включён — пусть работает)
+  // микрофон оставляем как есть
 });
 
-/* ===== init ===== */
+/* init */
 wishText.textContent = "Открой конверт 🙂";
 footerMsg.textContent = footerByState.off;
 if (ending) ending.hidden = true;
