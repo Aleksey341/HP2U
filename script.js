@@ -36,7 +36,6 @@ let blowHoldMs = 0;
 let lastTs = 0;
 let micEnabled = false;
 
-// blow tuning
 const BLOW_THRESHOLD = 0.12;
 const BLOW_HOLD_TIME = 220;
 const MIN_ON_TIME_MS = 350;
@@ -90,7 +89,6 @@ function beep(freq = 880, dur = 0.06, gain = 0.03) {
   } catch (_) {}
 }
 
-/* smoke + glow */
 function puffSmoke() {
   smoke.classList.remove("on");
   void smoke.offsetWidth;
@@ -228,7 +226,7 @@ function effectFirework(x, y) {
 
 const effects = [effectConfetti, effectSparkles, effectFirework];
 
-/* ===== Candle state ===== */
+/* candle */
 function setCandleOn() {
   flame.classList.add("on");
   candleOnSince = performance.now();
@@ -239,7 +237,7 @@ function setCandleOff() {
   footerMsg.textContent = footerByState.off;
 }
 
-/* ===== Mic ===== */
+/* mic UI */
 function setMicUI({ enabled, text, level = null } = {}) {
   micBtn.classList.toggle("is-on", !!enabled);
   micBtn.setAttribute("aria-pressed", enabled ? "true" : "false");
@@ -357,7 +355,7 @@ function monitorMic() {
   micRAF = requestAnimationFrame(loop);
 }
 
-/* ===== Events ===== */
+/* events */
 function openEnvelope() {
   envelope.classList.add("open");
   opened = true;
@@ -400,7 +398,6 @@ cake.addEventListener("click", (e) => {
   const y = rect.top + rect.height * 0.15;
 
   if (!flame.classList.contains("on")) {
-    // после задувания: мягкие искры и пожелания
     effectSparkles(x, y);
     setRandomWish();
     return;
@@ -447,7 +444,6 @@ closeCard.addEventListener("click", (e) => {
   hint.textContent = "Нажми, чтобы открыть…";
 
   setCandleOff();
-  // микрофон оставляем как есть (можно выключить вручную)
 });
 
 /* init */
