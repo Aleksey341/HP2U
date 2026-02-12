@@ -26,10 +26,11 @@ body{
 
 .stage{
   min-height: 100svh;
-  display:grid;
-  place-items:start center;
-  padding:14px;
+  display: grid;
+  place-items: center;   /* ✅ центр по умолчанию (ПК) */
+  padding: 14px;
 }
+
 
 .card-wrap{
   width:min(560px, 92vw);
@@ -398,3 +399,4 @@ body{
   .steps{ padding: 9px 10px; }
   .step{ font-size: 12.2px; }
 }
+
