@@ -11,7 +11,7 @@ const smoke = document.getElementById("smoke");
 const wick = document.getElementById("wick");
 
 const randomBtn = document.getElementById("randomBtn");
-const partyBtn = document.getElementById("partyBtn");
+const closeLetterBtn = document.getElementById("closeLetterBtn");
 
 const ending = document.getElementById("ending");
 const closeCard = document.getElementById("closeCard");
@@ -129,7 +129,7 @@ function runParticles(particles, drawFn) {
 function effectConfetti(x, y) {
   const particles = [];
   for (let i = 0; i < 160; i++) {
-    const a = (Math.random() * Math.PI) - Math.PI/2;
+    const a = -Math.PI/2 + (Math.random() - 0.5) * 1.2;
     const s = 4 + Math.random() * 9;
     particles.push({
       x, y,
@@ -388,14 +388,16 @@ randomBtn.addEventListener("click", (e) => {
   beep(880, 0.05, 0.02);
 });
 
-partyBtn.addEventListener("click", (e) => {
+closeLetterBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  const rect = cake.getBoundingClientRect();
-  effectConfetti(rect.left + rect.width*0.5, rect.top + rect.height*0.2);
-  setRandomWish();
-  beep(1040, 0.06, 0.03);
+  envelope.classList.remove("open");
+  opened = false;
+  ending.hidden = true;
+  wishText.textContent = "Открой конверт 🙂";
+  footerMsg.textContent = "Нажми на конверт, чтобы начать.";
+  hint.textContent = "Нажми, чтобы открыть…";
+  setCandleOff("ui");
 });
-
 cake.addEventListener("click", (e) => {
   e.stopPropagation();
 
