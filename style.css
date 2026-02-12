@@ -27,7 +27,7 @@ body{
 .stage{
   min-height: 100svh;
   display:grid;
-  place-items:start center;
+  place-items:center;
   padding:14px;
 }
 
@@ -385,6 +385,7 @@ body{
 
 /* mobile */
 @media (max-width: 420px){
+  .stage{ place-items:start center; }
   .envelope{ height: 260px; }
   .letter{ width: calc(100% - 28px); }
   .letter__body{ padding: 10px 14px 14px; }
