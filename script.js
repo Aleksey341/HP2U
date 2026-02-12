@@ -10,10 +10,6 @@ const flame = document.getElementById("flame");
 const smoke = document.getElementById("smoke");
 const wick = document.getElementById("wick");
 
-const candleSlider = document.getElementById("candleSlider");
-const sliderState = document.getElementById("sliderState");
-const sliderHint = document.getElementById("sliderHint");
-
 const randomBtn = document.getElementById("randomBtn");
 const partyBtn = document.getElementById("partyBtn");
 
@@ -31,7 +27,7 @@ let opened = false;
 let lastWish = -1;
 let effectIndex = 0;
 
-/* ===== MIC ===== */
+/* MIC */
 let micStream = null;
 let audioCtx = null;
 let analyser = null;
@@ -55,8 +51,8 @@ const wishes = [
 ];
 
 const footerByState = {
-  off: "Подсказка: зажги свечу слайдером — и загадай желание… (или задуть — в микрофон)",
-  on:  "Свеча горит. Самое время загадать желание… (попробуй задуть в микрофон 🙂)",
+  off: "Подсказка: включи микрофон и подуй, чтобы задуть свечу 🙂",
+  on:  "Свеча горит. Загадай желание… (и попробуй задуть в микрофон 🙂)",
 };
 
 function setRandomWish() {
@@ -93,9 +89,8 @@ function beep(freq = 880, dur = 0.06, gain = 0.03) {
   } catch (_) {}
 }
 
-/* smoke + wick glow */
+/* smoke + glow */
 function puffSmoke() {
-  if (!smoke) return;
   smoke.classList.remove("on");
   void smoke.offsetWidth;
   smoke.classList.add("on");
@@ -103,18 +98,16 @@ function puffSmoke() {
 }
 
 function wickGlow() {
-  if (!wick) return;
   wick.classList.remove("glow");
   void wick.offsetWidth;
   wick.classList.add("glow");
   setTimeout(() => wick.classList.remove("glow"), 300);
 }
 
-/* FX */
+/* FX helpers */
 function clearFx() {
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 }
-
 function runParticles(particles, drawFn) {
   function frame() {
     clearFx();
@@ -160,44 +153,6 @@ function effectConfetti(x, y) {
     ctx.fillStyle = `hsl(${p.hue} 90% 60%)`;
     if (p.shape === "rect") ctx.fillRect(-p.r, -p.r*0.6, p.r*2.2, p.r*1.2);
     else { ctx.beginPath(); ctx.arc(0,0,p.r,0,Math.PI*2); ctx.fill(); }
-    ctx.restore();
-  });
-}
-
-function effectHearts(x, y) {
-  const particles = [];
-  for (let i = 0; i < 90; i++) {
-    const a = (Math.random() * Math.PI) - Math.PI/2;
-    const s = 2.5 + Math.random() * 5.5;
-    particles.push({
-      x, y,
-      vx: Math.cos(a)*s + (Math.random()-0.5)*1.2,
-      vy: Math.sin(a)*s - Math.random()*1.5,
-      g: 0.08,
-      life: 90 + Math.random()*50,
-      size: 10 + Math.random()*14,
-      hue: 340 + Math.floor(Math.random()*30),
-      wobble: Math.random()*Math.PI*2,
-    });
-  }
-  runParticles(particles, (p) => {
-    const alpha = Math.max(0, Math.min(1, p.life / 120));
-    p.wobble += 0.15;
-    const wx = Math.sin(p.wobble) * 0.6;
-
-    ctx.save();
-    ctx.translate(p.x + wx, p.y);
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = `hsl(${p.hue} 90% 60%)`;
-
-    const s = p.size;
-    ctx.beginPath();
-    ctx.moveTo(0, s*0.25);
-    ctx.bezierCurveTo(0, 0, -s*0.55, 0, -s*0.55, s*0.35);
-    ctx.bezierCurveTo(-s*0.55, s*0.8, 0, s*0.95, 0, s*1.2);
-    ctx.bezierCurveTo(0, s*0.95, s*0.55, s*0.8, s*0.55, s*0.35);
-    ctx.bezierCurveTo(s*0.55, 0, 0, 0, 0, s*0.25);
-    ctx.fill();
     ctx.restore();
   });
 }
@@ -266,78 +221,38 @@ function effectFirework(x, y) {
     ctx.beginPath();
     ctx.arc(p.x, p.y, 2.2, 0, Math.PI*2);
     ctx.fill();
-
-    ctx.restore();
-  });
-}
-
-function effectRainbowWave(x, y) {
-  const particles = [];
-  for (let i = 0; i < 180; i++) {
-    particles.push({
-      x: x + (Math.random()-0.5)*220,
-      y: y + (Math.random()-0.5)*30,
-      vx: (Math.random()-0.5)*0.8,
-      vy: - (1.6 + Math.random()*1.6),
-      g: -0.01,
-      life: 70 + Math.random()*50,
-      r: 2 + Math.random()*3,
-      hue: Math.floor((i/180)*360),
-    });
-  }
-  runParticles(particles, (p) => {
-    const alpha = Math.max(0, Math.min(1, p.life / 110));
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = `hsl(${p.hue} 90% 60%)`;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-    ctx.fill();
     ctx.restore();
   });
 }
 
 const effects = [
-  { fn: effectConfetti },
-  { fn: effectHearts },
-  { fn: effectSparkles },
-  { fn: effectFirework },
-  { fn: effectRainbowWave },
+  effectConfetti,
+  effectSparkles,
+  effectFirework
 ];
 
 /* candle state */
-function setCandleState(isOn, source = "ui") {
-  flame.classList.toggle("on", isOn);
-  sliderState.textContent = isOn ? "горит" : "потушена";
-  footerMsg.textContent = isOn ? footerByState.on : footerByState.off;
-
-  if (isOn) {
-    candleOnSince = performance.now();
-    wishText.textContent = "Зажгли свечу… теперь загадай желание 🙂";
-  } else {
-    setRandomWish();
-  }
-
-  if (!isOn && source === "mic") {
-    candleSlider.value = "0";
-  }
+function setCandleOn() {
+  flame.classList.add("on");
+  candleOnSince = performance.now();
+  footerMsg.textContent = footerByState.on;
+}
+function setCandleOff(source = "mic") {
+  flame.classList.remove("on");
+  footerMsg.textContent = footerByState.off;
 }
 
 /* mic UI */
 function setMicUI({ enabled, text, level = null } = {}) {
-  if (micBtn) {
-    micBtn.classList.toggle("is-on", !!enabled);
-    micBtn.setAttribute("aria-pressed", enabled ? "true" : "false");
-    micBtn.textContent = enabled ? "Микрофон: вкл ✅" : "Микрофон: выкл 🎙️";
-  }
+  micBtn.classList.toggle("is-on", !!enabled);
+  micBtn.setAttribute("aria-pressed", enabled ? "true" : "false");
+  micBtn.textContent = enabled ? "Микрофон: вкл ✅" : "Микрофон: выкл 🎙️";
 
-  if (micStatus) {
-    if (level != null && enabled) {
-      const bars = Math.max(0, Math.min(10, Math.floor(level * 60)));
-      micStatus.textContent = `Микрофон: слушаю ${"▮".repeat(bars)}${"▯".repeat(10 - bars)}`;
-    } else {
-      micStatus.textContent = text ?? (enabled ? "Микрофон: включён" : "Микрофон: выключен");
-    }
+  if (level != null && enabled) {
+    const bars = Math.max(0, Math.min(10, Math.floor(level * 60)));
+    micStatus.textContent = `Микрофон: слушаю ${"▮".repeat(bars)}${"▯".repeat(10 - bars)}`;
+  } else {
+    micStatus.textContent = text ?? (enabled ? "Микрофон: включён" : "Микрофон: выключен");
   }
 }
 
@@ -425,16 +340,16 @@ function monitorMic() {
     if (isOn && onLongEnough && blowHoldMs >= BLOW_HOLD_TIME) {
       blowHoldMs = 0;
 
-      setCandleState(false, "mic");
+      setCandleOff("mic");
       wickGlow();
       puffSmoke();
 
       const rect = cake.getBoundingClientRect();
-      effects[2].fn(rect.left + rect.width * 0.5, rect.top + rect.height * 0.12);
+      effectSparkles(rect.left + rect.width * 0.5, rect.top + rect.height * 0.12);
 
       wishText.textContent = "Свеча погасла… желание отправлено во Вселенную 🙂";
-      footerMsg.textContent = "Можно закрыть открытку ниже — или зажечь ещё раз.";
-      if (ending) ending.hidden = false;
+      footerMsg.textContent = "Можно закрыть открытку ниже — или открыть снова.";
+      ending.hidden = false;
 
       beep(520, 0.08, 0.02);
     }
@@ -449,35 +364,22 @@ function monitorMic() {
 function openEnvelope() {
   envelope.classList.add("open");
   opened = true;
-  hint.textContent = "Зажги свечу слайдером…";
-  setRandomWish();
+  hint.textContent = "Загадай желание 🙂";
+
+  setCandleOn();
+  ending.hidden = true;
+
+  wishText.textContent = "Свеча уже горит. Загадай желание… 🙂";
+  footerMsg.textContent = footerByState.on;
 
   const r = envelope.getBoundingClientRect();
-  effects[0].fn(r.left + r.width*0.55, r.top + r.height*0.35);
+  effectConfetti(r.left + r.width*0.55, r.top + r.height*0.35);
   beep(988, 0.05, 0.025);
 }
 
 envelope.addEventListener("click", () => {
   if (!opened) openEnvelope();
   else { setRandomWish(); beep(740, 0.05, 0.02); }
-});
-
-candleSlider.addEventListener("input", () => {
-  const wasOn = flame.classList.contains("on");
-  const isOn = Number(candleSlider.value) >= 60;
-
-  setCandleState(isOn, "ui");
-
-  if (isOn && sliderHint) sliderHint.style.display = "none";
-
-  if (wasOn && !isOn) {
-    wickGlow();
-    puffSmoke();
-  }
-
-  if (!wasOn && isOn) {
-    beep(1040, 0.05, 0.02);
-  }
 });
 
 randomBtn.addEventListener("click", (e) => {
@@ -489,7 +391,7 @@ randomBtn.addEventListener("click", (e) => {
 partyBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   const rect = cake.getBoundingClientRect();
-  effects[0].fn(rect.left + rect.width*0.5, rect.top + rect.height*0.2);
+  effectConfetti(rect.left + rect.width*0.5, rect.top + rect.height*0.2);
   setRandomWish();
   beep(1040, 0.06, 0.03);
 });
@@ -497,21 +399,20 @@ partyBtn.addEventListener("click", (e) => {
 cake.addEventListener("click", (e) => {
   e.stopPropagation();
 
-  const isOn = flame.classList.contains("on");
   const rect = cake.getBoundingClientRect();
   const x = rect.left + rect.width * 0.5;
   const y = rect.top + rect.height * 0.15;
 
+  const isOn = flame.classList.contains("on");
+
   if (!isOn) {
+    // после задувания оставляем торт кликабельным, но мягко
+    effects[1](x, y);
     setRandomWish();
-    footerMsg.textContent = "Псс… сначала зажги свечу слайдером (а микрофон — чтобы эффектно задуть) 🙂";
-    effects[2].fn(x, y);
-    beep(660, 0.05, 0.02);
     return;
   }
 
-  const eff = effects[effectIndex % effects.length];
-  eff.fn(x, y);
+  effects[effectIndex % effects.length](x, y);
   effectIndex++;
 
   const phrases = [
@@ -524,11 +425,9 @@ cake.addEventListener("click", (e) => {
   wishText.textContent = p + " " + wishes[Math.floor(Math.random() * wishes.length)];
 
   beep(880, 0.05, 0.02);
-  setTimeout(() => beep(1040, 0.05, 0.02), 70);
-  setTimeout(() => beep(1320, 0.05, 0.02), 140);
 });
 
-micBtn?.addEventListener("click", async (e) => {
+micBtn.addEventListener("click", async (e) => {
   e.stopPropagation();
 
   if (micEnabled) {
@@ -541,29 +440,24 @@ micBtn?.addEventListener("click", async (e) => {
   if (ok) beep(1040, 0.05, 0.02);
 });
 
-closeCard?.addEventListener("click", (e) => {
+closeCard.addEventListener("click", (e) => {
   e.stopPropagation();
 
   envelope.classList.remove("open");
   opened = false;
 
-  if (ending) ending.hidden = true;
+  ending.hidden = true;
 
   wishText.textContent = "Открой конверт 🙂";
-  footerMsg.textContent = footerByState.off;
+  footerMsg.textContent = "Нажми на конверт, чтобы начать.";
   hint.textContent = "Нажми, чтобы открыть…";
 
-  flame.classList.remove("on");
-  candleSlider.value = "0";
-  sliderState.textContent = "потушена";
-
-  if (sliderHint) sliderHint.style.display = "";
-
+  setCandleOff("ui");
   // микрофон оставляем как есть
 });
 
 /* init */
 wishText.textContent = "Открой конверт 🙂";
-footerMsg.textContent = footerByState.off;
-if (ending) ending.hidden = true;
+footerMsg.textContent = "Нажми на конверт, чтобы начать.";
+ending.hidden = true;
 setMicUI({ enabled: false, text: "Микрофон: выключен" });
