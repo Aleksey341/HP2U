@@ -27,7 +27,7 @@ let opened = false;
 let lastWish = -1;
 let effectIndex = 0;
 
-/* MIC */
+/* ===== MIC ===== */
 let micStream = null;
 let audioCtx = null;
 let analyser = null;
@@ -36,6 +36,7 @@ let blowHoldMs = 0;
 let lastTs = 0;
 let micEnabled = false;
 
+// blow tuning
 const BLOW_THRESHOLD = 0.12;
 const BLOW_HOLD_TIME = 220;
 const MIN_ON_TIME_MS = 350;
@@ -104,7 +105,7 @@ function wickGlow() {
   setTimeout(() => wick.classList.remove("glow"), 300);
 }
 
-/* FX helpers */
+/* ===== FX ===== */
 function clearFx() {
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 }
@@ -225,24 +226,20 @@ function effectFirework(x, y) {
   });
 }
 
-const effects = [
-  effectConfetti,
-  effectSparkles,
-  effectFirework
-];
+const effects = [effectConfetti, effectSparkles, effectFirework];
 
-/* candle state */
+/* ===== Candle state ===== */
 function setCandleOn() {
   flame.classList.add("on");
   candleOnSince = performance.now();
   footerMsg.textContent = footerByState.on;
 }
-function setCandleOff(source = "mic") {
+function setCandleOff() {
   flame.classList.remove("on");
   footerMsg.textContent = footerByState.off;
 }
 
-/* mic UI */
+/* ===== Mic ===== */
 function setMicUI({ enabled, text, level = null } = {}) {
   micBtn.classList.toggle("is-on", !!enabled);
   micBtn.setAttribute("aria-pressed", enabled ? "true" : "false");
@@ -282,13 +279,13 @@ async function startMic() {
     src.connect(analyser);
 
     micEnabled = true;
-    setMicUI({ enabled: true, text: "Микрофон: включён — можно «задуть» свечу" });
+    setMicUI({ enabled: true, text: "Микрофон: включён — подуй, чтобы задуть свечу" });
 
     blowHoldMs = 0;
     lastTs = 0;
     monitorMic();
     return true;
-  } catch (err) {
+  } catch {
     setMicUI({ enabled: false, text: "Микрофон: доступ не предоставлен" });
     return false;
   }
@@ -340,7 +337,7 @@ function monitorMic() {
     if (isOn && onLongEnough && blowHoldMs >= BLOW_HOLD_TIME) {
       blowHoldMs = 0;
 
-      setCandleOff("mic");
+      setCandleOff();
       wickGlow();
       puffSmoke();
 
@@ -360,17 +357,16 @@ function monitorMic() {
   micRAF = requestAnimationFrame(loop);
 }
 
-/* events */
+/* ===== Events ===== */
 function openEnvelope() {
   envelope.classList.add("open");
   opened = true;
   hint.textContent = "Загадай желание 🙂";
 
-  setCandleOn();
   ending.hidden = true;
 
+  setCandleOn();
   wishText.textContent = "Свеча уже горит. Загадай желание… 🙂";
-  footerMsg.textContent = footerByState.on;
 
   const r = envelope.getBoundingClientRect();
   effectConfetti(r.left + r.width*0.55, r.top + r.height*0.35);
@@ -403,11 +399,9 @@ cake.addEventListener("click", (e) => {
   const x = rect.left + rect.width * 0.5;
   const y = rect.top + rect.height * 0.15;
 
-  const isOn = flame.classList.contains("on");
-
-  if (!isOn) {
-    // после задувания оставляем торт кликабельным, но мягко
-    effects[1](x, y);
+  if (!flame.classList.contains("on")) {
+    // после задувания: мягкие искры и пожелания
+    effectSparkles(x, y);
     setRandomWish();
     return;
   }
@@ -452,8 +446,8 @@ closeCard.addEventListener("click", (e) => {
   footerMsg.textContent = "Нажми на конверт, чтобы начать.";
   hint.textContent = "Нажми, чтобы открыть…";
 
-  setCandleOff("ui");
-  // микрофон оставляем как есть
+  setCandleOff();
+  // микрофон оставляем как есть (можно выключить вручную)
 });
 
 /* init */
