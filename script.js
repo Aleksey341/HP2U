@@ -1,3 +1,4 @@
+/* script.js */
 const envelope = document.getElementById("envelope");
 const hint = document.getElementById("hint");
 
@@ -11,9 +12,13 @@ const wick = document.getElementById("wick");
 
 const candleSlider = document.getElementById("candleSlider");
 const sliderState = document.getElementById("sliderState");
+const sliderHint = document.getElementById("sliderHint");
 
 const randomBtn = document.getElementById("randomBtn");
 const partyBtn = document.getElementById("partyBtn");
+
+const ending = document.getElementById("ending");
+const closeCard = document.getElementById("closeCard");
 
 const micBtn = document.getElementById("micBtn");
 const micStatus = document.getElementById("micStatus");
@@ -93,7 +98,7 @@ function beep(freq = 880, dur = 0.06, gain = 0.03) {
 function puffSmoke() {
   if (!smoke) return;
   smoke.classList.remove("on");
-  void smoke.offsetWidth; // reflow
+  void smoke.offsetWidth;
   smoke.classList.add("on");
   setTimeout(() => smoke.classList.remove("on"), 2600);
 }
@@ -244,7 +249,6 @@ function effectFirework(x, y) {
   }
   runParticles(particles, (p) => {
     const alpha = Math.max(0, Math.min(1, p.life / 110));
-
     p.trail.push({ x: p.x, y: p.y });
     if (p.trail.length > 8) p.trail.shift();
 
@@ -408,7 +412,6 @@ function monitorMic() {
 
     analyser.getByteTimeDomainData(data);
 
-    // RMS громкости
     let sum = 0;
     for (let i = 0; i < data.length; i++) {
       const v = (data[i] - 128) / 128;
@@ -416,7 +419,6 @@ function monitorMic() {
     }
     const rms = Math.sqrt(sum / data.length);
 
-    // удержание порога
     const dt = lastTs ? (ts - lastTs) : 0;
     lastTs = ts;
 
@@ -439,7 +441,10 @@ function monitorMic() {
       effects[2].fn(rect.left + rect.width * 0.5, rect.top + rect.height * 0.12);
 
       wishText.textContent = "Свеча погасла… желание отправлено во Вселенную 🙂";
-      footerMsg.textContent = "Хочешь ещё раз? Зажги свечу слайдером.";
+      footerMsg.textContent = "Можно закрыть открытку ниже — или зажечь ещё раз.";
+
+      if (ending) ending.hidden = false;
+
       beep(520, 0.08, 0.02);
     }
 
@@ -472,13 +477,14 @@ candleSlider.addEventListener("input", () => {
 
   setCandleState(isOn, "ui");
 
-  // если потушили слайдером — чуть кино
+  if (isOn && sliderHint) sliderHint.style.display = "none";
+
+  // если потушили слайдером — чуть кино (без финала)
   if (wasOn && !isOn) {
     wickGlow();
     puffSmoke();
   }
 
-  // если зажгли — лёгкий акцент
   if (!wasOn && isOn) {
     beep(1040, 0.05, 0.02);
   }
@@ -545,7 +551,29 @@ micBtn?.addEventListener("click", async (e) => {
   if (ok) beep(1040, 0.05, 0.02);
 });
 
+closeCard?.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  envelope.classList.remove("open");
+  opened = false;
+
+  if (ending) ending.hidden = true;
+
+  wishText.textContent = "Открой конверт 🙂";
+  footerMsg.textContent = footerByState.off;
+  hint.textContent = "Нажми, чтобы открыть…";
+
+  flame.classList.remove("on");
+  candleSlider.value = "0";
+  sliderState.textContent = "потушена";
+
+  if (sliderHint) sliderHint.style.display = "";
+
+  // микрофон оставляем как есть (если включён — пусть работает)
+});
+
 /* ===== init ===== */
 wishText.textContent = "Открой конверт 🙂";
 footerMsg.textContent = footerByState.off;
+if (ending) ending.hidden = true;
 setMicUI({ enabled: false, text: "Микрофон: выключен" });
