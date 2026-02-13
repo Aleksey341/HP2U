@@ -87,6 +87,25 @@
     <canvas id="fx" class="fx" aria-hidden="true"></canvas>
   </main>
 
+  <section id="comicSection" class="comic-section">
+    <header class="comic-section__topbar">
+      <div class="comic-section__title">Комикс</div>
+      <div class="comic-section__meta"><span id="comicPageLabel">1 / 8</span></div>
+    </header>
+    <div class="comic-section__stage">
+      <div class="comic-section__viewer" id="comicViewer" aria-label="Просмотр страницы комикса">
+        <img id="comicPageImg" class="comic-section__img" alt="Страница 1" />
+        <button class="comic-section__hotzone comic-section__hotzone--left" id="comicLeftZone" aria-label="Назад"></button>
+        <button class="comic-section__hotzone comic-section__hotzone--right" id="comicRightZone" aria-label="Вперед"></button>
+      </div>
+      <div class="comic-section__controls" aria-label="Управление">
+        <button id="comicPrevBtn" class="comic-section__btn" type="button" aria-label="Предыдущая страница">◀</button>
+        <button id="comicNextBtn" class="comic-section__btn" type="button" aria-label="Следующая страница">▶</button>
+      </div>
+      <div class="comic-section__hint">Тап/клик справа — вперёд, слева — назад. На телефоне — свайп.</div>
+    </div>
+  </section>
+
   <script src="script.js"></script>
 </body>
 </html>

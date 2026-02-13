@@ -360,6 +360,9 @@ function monitorMic() {
       ending.hidden = false;
 
       beep(520, 0.08, 0.02);
+
+      // After candle is blown out, show comic with delay
+      setTimeout(showComic, 2000);
     }
 
     micRAF = requestAnimationFrame(loop);
@@ -467,6 +470,85 @@ wishText.textContent = "Открой конверт 🙂";
 footerMsg.textContent = "Нажми на конверт, чтобы начать.";
 ending.hidden = true;
 setMicUI({ enabled: false, text: "выключен" });
+
+/* ========== COMIC INTEGRATION ========== */
+const comicPages = [
+  "assets/p1.png","assets/p2.png","assets/p3.png","assets/p4.png",
+  "assets/p5.png","assets/p6.png","assets/p7.png","assets/p8.png"
+];
+let comicIdx = 0;
+let comicInited = false;
+
+function showComic() {
+  const cardWrap = document.querySelector(".card-wrap");
+  const comicSection = document.getElementById("comicSection");
+  if (!comicSection) return;
+
+  cardWrap.classList.add("fade-out");
+
+  setTimeout(() => {
+    comicSection.classList.add("visible");
+    if (!comicInited) { initComic(); comicInited = true; }
+  }, 900);
+}
+
+function initComic() {
+  const img = document.getElementById("comicPageImg");
+  const prevBtn = document.getElementById("comicPrevBtn");
+  const nextBtn = document.getElementById("comicNextBtn");
+  const leftZone = document.getElementById("comicLeftZone");
+  const rightZone = document.getElementById("comicRightZone");
+  const pageLabel = document.getElementById("comicPageLabel");
+  const viewer = document.getElementById("comicViewer");
+  const n = comicPages.length;
+
+  function render() {
+    img.src = comicPages[comicIdx];
+    img.alt = "Страница " + (comicIdx + 1);
+    pageLabel.textContent = (comicIdx + 1) + " / " + n;
+    prevBtn.disabled = comicIdx <= 0;
+    nextBtn.disabled = comicIdx >= n - 1;
+  }
+
+  function goTo(i) {
+    comicIdx = Math.max(0, Math.min(n - 1, i));
+    render();
+  }
+  const next = () => { if (comicIdx < n - 1) goTo(comicIdx + 1); };
+  const prev = () => { if (comicIdx > 0) goTo(comicIdx - 1); };
+
+  prevBtn.addEventListener("click", prev);
+  nextBtn.addEventListener("click", next);
+  leftZone.addEventListener("click", prev);
+  rightZone.addEventListener("click", next);
+
+  window.addEventListener("keydown", (e) => {
+    if (!document.getElementById("comicSection").classList.contains("visible")) return;
+    if (e.key === "ArrowRight") next();
+    if (e.key === "ArrowLeft") prev();
+  });
+
+  // Swipe support
+  let startX = null, startY = null;
+  viewer.addEventListener("touchstart", (e) => {
+    if (!e.touches || e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  viewer.addEventListener("touchend", (e) => {
+    if (startX == null) return;
+    const t = e.changedTouches && e.changedTouches[0];
+    if (!t) { startX = startY = null; return; }
+    const dx = t.clientX - startX;
+    const dy = t.clientY - startY;
+    startX = startY = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    if (dx < 0) next(); else prev();
+  }, { passive: true });
+
+  render();
+}
 
 /* Falling particles */
 (function() {
