@@ -361,8 +361,8 @@ function monitorMic() {
 
       beep(520, 0.08, 0.02);
 
-      // After candle is blown out, show comic with delay
-      setTimeout(showComic, 2000);
+      // Show comic immediately after candle is blown out
+      showComic();
     }
 
     micRAF = requestAnimationFrame(loop);
