@@ -16,7 +16,6 @@ const ending = document.getElementById("ending");
 const closeCard = document.getElementById("closeCard");
 
 const micToggle = document.getElementById("micToggle");
-const soundToggle = document.getElementById("soundToggle");
 
 const tip = document.getElementById("tip");
 const canvas = document.getElementById("fx");
@@ -61,7 +60,7 @@ function showWish(text) {
   wishText.classList.add("show");
   wishTimer = setTimeout(() => {
     wishText.classList.remove("show");
-  }, 2000);
+  }, 5000);
 }
 
 function setRandomWish() {
@@ -83,7 +82,6 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 function beep(freq = 880, dur = 0.06, gain = 0.03) {
-  if (soundToggle.checked) return;
   try {
     const ac = new (window.AudioContext || window.webkitAudioContext)();
     const o = ac.createOscillator();
@@ -436,7 +434,7 @@ cake.addEventListener("click", (e) => {
   beep(880, 0.05, 0.02);
 });
 
-micToggle.addEventListener("click", async (e) => {
+async function toggleMic(e) {
   e.stopPropagation();
 
   if (micEnabled) {
@@ -447,7 +445,12 @@ micToggle.addEventListener("click", async (e) => {
 
   const ok = await startMic();
   if (ok) beep(1040, 0.05, 0.02);
-});
+}
+
+micToggle.addEventListener("click", toggleMic);
+
+const stepMicBtn = document.getElementById("stepMicBtn");
+if (stepMicBtn) stepMicBtn.addEventListener("click", toggleMic);
 
 closeCard.addEventListener("click", (e) => {
   e.stopPropagation();

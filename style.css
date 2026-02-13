@@ -321,6 +321,20 @@ body{
   border: 1px dashed rgba(0,0,0,.12);
 }
 .step{ font-size:12.8px; opacity:.72; }
+.step-mic-btn{
+  display:inline-block;
+  padding:4px 10px;
+  border:1.5px solid #118ab2;
+  border-radius:10px;
+  color:#118ab2;
+  font-weight:600;
+  cursor:pointer;
+  transition: background .15s, color .15s;
+}
+.step-mic-btn:hover{
+  background:#118ab2;
+  color:#fff;
+}
 .dot{ font-size:12px; opacity:.35; }
 
 .actions{ display:flex; gap:10px; flex-wrap:wrap; }
