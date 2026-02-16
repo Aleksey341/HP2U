@@ -9,29 +9,26 @@
 </head>
 
 <body>
-  <div class="balloons" aria-hidden="true">
+  <div class="balloons">
     <div class="balloon"></div><div class="balloon"></div><div class="balloon"></div><div class="balloon"></div>
   </div>
 
-  <div class="particles-bg" id="particlesBg" aria-hidden="true"></div>
+  <div class="particles-bg" id="particlesBg"></div>
 
   <main class="stage">
     <section class="card-wrap">
-      <!-- Envelope: открывается ТОЛЬКО по клику на печать-сердце -->
-      <button class="envelope" id="envelope" type="button" aria-label="Конверт">
+      <button class="envelope" id="envelope" type="button" aria-label="Открыть конверт">
         <span id="heartSeal" class="heart-seal" role="button" tabindex="0" aria-label="Вскрыть конверт">
-          <span class="heart-seal__heart" aria-hidden="true">❤</span>
+          <span class="heart-seal__heart">❤</span>
           <span class="heart-seal__shine" aria-hidden="true"></span>
         </span>
 
-        <span class="env-back" aria-hidden="true"></span>
-        <span class="env-front" aria-hidden="true"></span>
-        <span class="env-flap" aria-hidden="true"></span>
-
+        <span class="env-back"></span>
+        <span class="env-front"></span>
+        <span class="env-flap"></span>
         <span class="hint" id="hint"></span>
       </button>
 
-      <!-- Letter -->
       <article class="letter" id="letter" aria-live="polite">
         <button class="btn-close" id="closeLetterBtn" type="button" aria-label="Закрыть">✕</button>
 
@@ -43,12 +40,10 @@
         </header>
 
         <div class="letter__body">
-          <!-- Единая плашка: "Свеча уже горит... + Нажми на торт..." -->
           <p id="wishText" class="wish"></p>
 
           <div class="cake-area">
-            <!-- tip оставлен, но по вашей логике он скрывается и не используется как отдельная плашка -->
-            <div class="tip" id="tip" aria-hidden="true">Нажми на торт — появятся пожелания ✨</div>
+            <div class="tip" id="tip">Нажми на торт — появляется пожелание ✨</div>
 
             <div class="cake-wrap">
               <div class="candle" aria-hidden="true">
@@ -68,26 +63,18 @@
           </div>
 
           <div class="controls">
-            <!-- Steps: показываем по одному -->
             <div class="steps" id="steps">
-              <!-- STEP 1 (добавили обратно, т.к. в JS есть step1) -->
-              <span class="step" id="step1" hidden>1) Загадай желание</span>
+              <!-- ✅ ЕДИНАЯ ПОЛНОЦЕННАЯ КНОПКА (всё кликабельно) -->
+              <button class="step-mic-btn" id="stepMicBtn" type="button" hidden>
+                Включи микрофон, подуй в микрофон
+              </button>
 
-              <!-- STEP 2: ОДНА кнопка целиком (включая "2)") -->
-              <span class="step" id="step2" hidden>
-                <button class="step-mic-btn step-mic-btn--full" id="stepMicBtn" type="button">
-                  2) Включи микрофон, подуй в микрофон
-                </button>
-              </span>
-
-              <!-- STEP 3 -->
-              <span class="step" id="step3" hidden>3) Подуй, чтобы задуть свечу</span>
+              <span class="step" id="step3" hidden>Подуй, чтобы задуть свечу</span>
             </div>
 
             <div class="actions">
               <div id="inlineTapHint" class="inline-tap-hint" hidden>
-                Не получилось задуть свечу? Тогда
-                <span class="inline-tap-hint__cta">кликни по экрану</span>.
+                Не получилось задуть свечу? Тогда <span class="inline-tap-hint__cta">кликни по экрану</span>.
               </div>
             </div>
 
@@ -100,7 +87,7 @@
 
           <div class="ending" id="ending" hidden>
             <p class="ending-text">
-              Спасибо, что остановилась на секунду.<br />
+              Спасибо, что остановилась на секунду.<br>
               Пусть желание обязательно сбудется ✨
             </p>
             <button class="btn btn2" id="closeCard" type="button">Закрыть открытку</button>
@@ -112,8 +99,7 @@
     <canvas id="fx" class="fx" aria-hidden="true"></canvas>
   </main>
 
-  <!-- Comic -->
-  <section id="comicSection" class="comic-section" aria-label="Комикс">
+  <section id="comicSection" class="comic-section">
     <header class="comic-section__topbar">
       <div class="comic-section__title">История одного решения</div>
       <div class="comic-section__meta"><span id="comicPageLabel">1 / 8</span></div>
@@ -123,7 +109,7 @@
       <div class="comic-section__viewer" id="comicViewer" aria-label="Просмотр страницы комикса">
         <img id="comicPageImg" class="comic-section__img" alt="Страница 1" />
         <button class="comic-section__hotzone comic-section__hotzone--left" id="comicLeftZone" aria-label="Назад"></button>
-        <button class="comic-section__hotzone comic-section__hotzone--right" id="comicRightZone" aria-label="Вперёд"></button>
+        <button class="comic-section__hotzone comic-section__hotzone--right" id="comicRightZone" aria-label="Вперед"></button>
       </div>
 
       <div class="comic-section__controls" aria-label="Управление">
@@ -137,15 +123,12 @@
     </div>
   </section>
 
-  <!-- УБРАЛИ битый HTML от старого fullscreen overlay (у вас он был обрезан и ломал DOM) -->
-
-  <!-- Audio -->
   <audio id="bdaySong" preload="auto">
-    <source src="assets/audio/irina_bday_song.mp3" type="audio/mpeg" />
+    <source src="assets/audio/irina_bday_song.mp3" type="audio/mpeg">
   </audio>
 
   <audio id="sinatraSong" preload="auto">
-    <source src="assets/audio/frank_sinatra_happy_birthday.mp3" type="audio/mpeg" />
+    <source src="assets/audio/frank_sinatra_happy_birthday.mp3" type="audio/mpeg">
   </audio>
 
   <script src="script.js"></script>
