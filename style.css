@@ -647,9 +647,13 @@ body{
   font-size:13px;
 }
 
-.heart-seal__heart{ font-size: 30px; 
-  color: #ff2d55;
+.heart-seal__heart{
+  font-size: 36px;
+  line-height: 1;
+  color: #ff2d55; /* красный */
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.18));
 }
+
 }
 
 /* Sealed heart button (center seam) */
