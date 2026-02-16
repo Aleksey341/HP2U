@@ -88,7 +88,7 @@ const wishes = [
 
 const footerByState = {
   off: "Подсказка: включи микрофон и подуй, чтобы задуть свечу 🙂",
-  on:  "Свеча горит. Загадай желание…",
+  on:  ,
 };
 
 function showWish(text) {
