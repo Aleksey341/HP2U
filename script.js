@@ -493,7 +493,7 @@ function openEnvelope() {
   setCandleOn();
   ending.hidden = true;
 
-  showWish("");
+  showWish("Свеча уже горит. Загадай желание… 🙂");
   if (steps) { steps.hidden = false; }
   setStep(1);
   footerMsg.textContent = footerByState.on;
