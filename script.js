@@ -73,8 +73,8 @@ let micHadAnyActivity = false;
 const MIC_ACTIVITY_THRESHOLD = 0.02;     // lower than blow threshold, just "any audible signal"
 const MIC_NO_REACTION_MS = 6000;         // how long to wait before showing fallback
 
-const BLOW_THRESHOLD = 0.12;
-const BLOW_HOLD_TIME = 220;
+const BLOW_THRESHOLD = 0.06;
+const BLOW_HOLD_TIME = 120;
 const MIN_ON_TIME_MS = 350;
 let candleOnSince = 0;
 
