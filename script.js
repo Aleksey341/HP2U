@@ -91,8 +91,8 @@ const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfo
 let micBaseline = null;       // RMS baseline
 let blowThreshold = 0.12;     // dynamic threshold (fallback to default)
 
-const BLOW_THRESHOLD = 0.12;
-const BLOW_HOLD_TIME = 220;
+const BLOW_THRESHOLD = 0.06;
+const BLOW_HOLD_TIME = 120;
 const MIN_ON_TIME_MS = 350;
 let candleOnSince = 0;
 
@@ -449,8 +449,9 @@ function monitorMic() {
       micBaseline.avg = micBaseline.sum / micBaseline.n;
       // Dynamic threshold: baseline * factor + offset (safe defaults)
       // On iOS baseline often higher due to processing; clamp to reasonable range
-      const dyn = (micBaseline.avg * 4.0) + 0.03;
-      blowThreshold = Math.max(0.04, Math.min(0.18, dyn));
+      const dyn = (micBaseline.avg * 2.2) + 0.015;
+      blowThreshold = Math.max(0.02, Math.min(0.10, dyn));
+
     }
 
     if (rms > blowThreshold) blowHoldMs += dt;
