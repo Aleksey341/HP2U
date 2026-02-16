@@ -37,6 +37,9 @@ let lastWish = -1;
 let effectIndex = 0;
 let wishTimer = null;
 
+// объединённая плашка-подсказка (после открытия конверта) — скрываем после 1-го клика по торту
+let introHintHidden = false;
+
 /* ===== MIC ===== */
 let micStream = null;
 let audioCtx = null;
@@ -119,13 +122,17 @@ function setStep(n) {
   if (step2) step2.hidden = v !== 2;
   if (step3) step3.hidden = v !== 3;
 }
+
+// ВАЖНО: пожелания НЕ исчезают сами — висят до следующего клика по торту
 function showWish(text) {
   if (!wishText) return;
   if (wishTimer) clearTimeout(wishTimer);
+  wishTimer = null;
+
   wishText.textContent = text;
   wishText.classList.add("show");
-  wishTimer = setTimeout(() => wishText.classList.remove("show"), 5000);
 }
+
 function setRandomWish() {
   let i = Math.floor(Math.random() * wishes.length);
   if (i === lastWish) i = (i + 1) % wishes.length;
@@ -543,8 +550,10 @@ function openEnvelope() {
   if (steps) steps.hidden = false;
   setStep(1);
 
-  // Candle hint above cake
-  showWish("Свеча уже горит. Загадай желание… 🙂");
+  // Объединённая плашка (одна) — сразу после открытия конверта
+  introHintHidden = false;
+  if (tip) tip.style.display = "none";
+  showWish("Свеча уже горит. Загадай желание… 🙂  ·  Нажми на торт — появятся пожелания ✨");
 
   if (footerMsg) footerMsg.textContent = footerByState.on;
 
@@ -572,6 +581,9 @@ function resetCardUI() {
 
   if (ending) ending.hidden = true;
 
+  // reset intro hint
+  introHintHidden = false;
+
   if (wishText) wishText.textContent = "Открой конверт 🙂";
   if (footerMsg) footerMsg.textContent = "Нажми на конверт, чтобы начать.";
   if (hint) hint.textContent = "";
@@ -580,10 +592,11 @@ function resetCardUI() {
 
   if (steps) steps.hidden = true;
   setStep(0);
-  if (tip) tip.style.display = "";
+
+  // tip больше не используем как отдельную плашку
+  if (tip) tip.style.display = "none";
 
   setCandleOff("ui");
-  // mic stays as is (your logic), but Sinatra must stop when candle off:
   stopSinatra();
 }
 
@@ -591,9 +604,16 @@ if (cake) {
   cake.addEventListener("click", (e) => {
     e.stopPropagation();
 
-    // Hide “Нажми на торт…” after first click
-    if (tip) tip.style.display = "none";
     if (hint) hint.textContent = "";
+
+    // Первый клик по торту: убираем объединённую плашку-подсказку
+    if (!introHintHidden) {
+      introHintHidden = true;
+      if (wishText) {
+        wishText.classList.remove("show");
+        wishText.textContent = "";
+      }
+    }
 
     const rect = cake.getBoundingClientRect();
     const x = rect.left + rect.width * 0.5;
@@ -658,6 +678,7 @@ if (footerMsg) footerMsg.textContent = "Нажми на конверт, чтоб
 if (ending) ending.hidden = true;
 if (steps) steps.hidden = true;
 setStep(0);
+if (tip) tip.style.display = "none";
 setMicUI({ enabled: false, text: "выключен" });
 stopSinatra();
 
